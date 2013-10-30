@@ -15,7 +15,7 @@ public class ConnectionFactory {
     private static final String STR_CONEXAO = "jdbc:mysql://localhost:3306/";
     private static final String DATABASE = "exemplochaveestrangeira";
     private static final String USER = "root";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "";
 
     public static Connection getConnection() throws SQLException {
 

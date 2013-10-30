@@ -16,4 +16,10 @@ public interface FuncaoDAO {
     int insert(Funcao f);
 
     List<Funcao> listAll();
+
+    boolean remove(int id);
+
+    int update(Funcao f);
+    
+    Funcao listById (int id);
 }

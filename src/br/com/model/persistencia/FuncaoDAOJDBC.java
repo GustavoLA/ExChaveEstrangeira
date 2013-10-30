@@ -22,6 +22,9 @@ public class FuncaoDAOJDBC implements FuncaoDAO {
 
     private static final String INSERT = "insert into funcao(nome) values (?)";
     private static final String LIST = "select * from funcao";
+    private static final String REMOVE = "delete from funcao where codigo = ?";
+    private static final String UPDATE = "update funcao set nome = ?, where codigo = ?";
+    private static final String LISTBYID = "select * from funcao where codigo = ?";
 
     public int insert(Funcao f) {
 
@@ -83,8 +86,96 @@ public class FuncaoDAOJDBC implements FuncaoDAO {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Erro ao fechar conexão" + ex.getMessage());
             }
-
         }
         return funcoes;
+    }
+
+    @Override
+    public boolean remove(int id) {
+        boolean retorno = false;
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+            conn = ConnectionFactory.getConnection();
+            pstm = conn.prepareStatement(REMOVE);
+            pstm.setInt(1, id);
+            pstm.execute();
+            retorno = true;
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao remover informações " + ex.getMessage());
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(conn, pstm);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão " + ex.getMessage());
+            }
+        }
+        return retorno;
+    }
+
+    @Override
+    public int update(Funcao f) {
+
+        int retorno = -1;
+        Connection conn = null;
+        PreparedStatement pstm = null;
+
+        try {
+            conn = ConnectionFactory.getConnection();
+            pstm = conn.prepareStatement(UPDATE);
+            pstm.setString(1, f.getNome());
+            pstm.setInt(2, f.getCodigo());
+            pstm.execute();
+            retorno = f.getCodigo();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao editar informações " + ex.getMessage());
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(conn, pstm);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão " + ex.getMessage());
+            }
+        }
+        return retorno;
+
+    }
+
+    @Override
+    public Funcao listById(int id) {
+
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        Funcao f = new Funcao();
+
+        try {
+            conn = ConnectionFactory.getConnection();
+            pstm = conn.prepareStatement(LISTBYID);
+            pstm.setInt(1, id);
+            rs = pstm.executeQuery();
+
+            while (rs.next()) {
+
+                f.setCodigo(rs.getInt("codigo"));
+                f.setNome(rs.getString("nome"));
+
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar" + ex.getMessage());
+
+        } finally {
+
+            try {
+                ConnectionFactory.closeConnection(conn, pstm, rs);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão" + ex.getMessage());
+            }
+        }
+        return f;
+
     }
 }

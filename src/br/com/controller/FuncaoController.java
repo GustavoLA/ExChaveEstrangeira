@@ -21,9 +21,24 @@ public class FuncaoController {
         return dao.insert(f);
 
     }
-    
-    public List<Funcao> ListarTodos(){
+
+    public List<Funcao> ListarTodos() {
         FuncaoDAO dao = new FuncaoDAOJDBC();
         return dao.listAll();
+    }
+
+    public boolean remove(int id) {
+        FuncaoDAO dao = new FuncaoDAOJDBC();
+        return dao.remove(id);
+    }
+
+    public int update(Funcao f) {
+        FuncaoDAO dao = new FuncaoDAOJDBC();
+        return dao.update(f);
+    }
+
+    public Funcao listById(int id) {
+        FuncaoDAO dao = new FuncaoDAOJDBC();
+        return dao.listById(id);
     }
 }
